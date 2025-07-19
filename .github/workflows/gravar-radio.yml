@@ -1,0 +1,27 @@
+
+name: Teste gravação 2min
+
+on:
+  workflow_dispatch:  # permite rodar manualmente
+
+jobs:
+  gravar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Gravar 2 minutos do streaming
+        run: |
+          ffmpeg -i "https://r11.ciclano.io/proxy/alex/stream" -t 120 -c copy bloco_teste.mp3
+
+      - name: Commit e enviar bloco
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add bloco_teste.mp3
+          git commit -m "Bloco teste gravado automaticamente"
+          git push
